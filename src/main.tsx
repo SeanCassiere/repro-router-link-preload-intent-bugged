@@ -12,12 +12,6 @@ import {
 
 import { z } from 'zod';
 
-declare module '@tanstack/react-router' {
-  interface RouterContext {
-    // auth: AuthContext
-  }
-}
-
 // Build our routes. We could do this in our component, too.
 const rootRoute = createRouteConfig({
   component: () => {
@@ -99,22 +93,25 @@ const testRouteIndexRoute = testRoute.createRoute({
     const searchParams = useSearch({ from: testRouteIndexRoute.id });
 
     React.useEffect(() => {
-      console.log('component loaderData');
+      console.log('component loaderData', loaderData);
     }, [loaderData]);
 
     React.useEffect(() => {
-      console.log('component searchParams');
+      console.log('component searchParams', searchParams);
     }, [searchParams]);
 
     return (
       <div className="p-2">
         <div className="p-2">
-          Welcome to the test route
+          <Link to="/">Back</Link>
+          <h1>Welcome to the test route</h1>
           <br />
           <p>
             Just returning search params in the loader. <i>Not important</i>{' '}
           </p>
-          <pre>Loader Data: {JSON.stringify(loaderData)}</pre>.
+          <pre className="py-4">
+            Loader Data: {JSON.stringify(loaderData, null, 2)}
+          </pre>
         </div>
       </div>
     );
@@ -144,6 +141,9 @@ declare module '@tanstack/react-router' {
   interface RegisterRouter {
     router: typeof router;
   }
+  interface RouterContext {
+    // auth: AuthContext
+  }
 }
 
 // Provide our location and routes to our application
@@ -162,6 +162,7 @@ function SubApp() {
     <>
       <RouterProvider
         router={router}
+        // defaultPreload="intent"
         context={{
           auth: useAuth(),
         }}
