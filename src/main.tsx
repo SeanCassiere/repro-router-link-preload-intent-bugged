@@ -4,8 +4,8 @@ import {
   Outlet,
   RouterProvider,
   Link,
-  useRouterStore,
   useLoaderData,
+  useSearch,
   ReactRouter,
   createRouteConfig,
 } from '@tanstack/react-router';
@@ -21,8 +21,6 @@ declare module '@tanstack/react-router' {
 // Build our routes. We could do this in our component, too.
 const rootRoute = createRouteConfig({
   component: () => {
-    const routerStore = useRouterStore();
-
     return (
       <>
         <Outlet />
@@ -97,14 +95,26 @@ const testRouteIndexRoute = testRoute.createRoute({
     return search;
   },
   component: () => {
-    const searchParams = useLoaderData({ from: testRouteIndexRoute.id });
+    const loaderData = useLoaderData({ from: testRouteIndexRoute.id });
+    const searchParams = useSearch({ from: testRouteIndexRoute.id });
+
+    React.useEffect(() => {
+      console.log('component loaderData');
+    }, [loaderData]);
+
+    React.useEffect(() => {
+      console.log('component searchParams');
+    }, [searchParams]);
 
     return (
       <div className="p-2">
         <div className="p-2">
           Welcome to the test route
           <br />
-          <pre>{JSON.stringify(searchParams)}</pre>.
+          <p>
+            Just returning search params in the loader. <i>Not important</i>{' '}
+          </p>
+          <pre>Loader Data: {JSON.stringify(loaderData)}</pre>.
         </div>
       </div>
     );
